@@ -1,0 +1,40 @@
+import pickle
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+# Sample data
+data = {
+    'study_hours': [5, 3, 8, 4, 7, 2, 6, 9, 1, 10],
+    'previous_grades': [85, 60, 92, 75, 88, 50, 78, 95, 45, 99],
+    'passed': [1, 0, 1, 0, 1, 0, 1, 1, 0, 1]
+}
+
+# Create DataFrame
+df = pd.DataFrame(data)
+
+# Features and Target
+X = df[['study_hours', 'previous_grades']]  # Features
+y = df['passed']  # Target
+
+# Train-test split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Initialize and train the model
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# Predict on test set
+y_pred = model.predict(X_test)
+
+# Print accuracy
+accuracy = accuracy_score(y_test, y_pred)
+print(f'Accuracy: {accuracy * 100:.2f}%')
+
+# Save the trained model to a file
+model_filename = 'models/student_model.pkl'
+with open(model_filename, 'wb') as model_file:
+    pickle.dump(model, model_file)
+
+print(f'Model saved to {model_filename}')
